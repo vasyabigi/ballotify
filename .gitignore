@@ -1,0 +1,14 @@
+# OS
+.DS_Store
+
+# Python
+*.pyc
+*.pyo
+
+# SQLite3 database files:
+*.db
+
+# Project
+/ballotify/public/static
+/ballotify/public/media
+/ballotify/logs
