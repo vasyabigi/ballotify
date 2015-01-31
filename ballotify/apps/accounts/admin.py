@@ -1,3 +1,11 @@
 from django.contrib import admin
 
-# Register your models here.
+from authtools.admin import NamedUserAdmin
+
+from models import User
+
+
+class UserAdmin(NamedUserAdmin):
+    pass
+
+admin.site.register(User, UserAdmin)

@@ -1,10 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-from django.template.defaultfilters import slugify
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-
-from unidecode import unidecode
 
 
 class UserManager(BaseUserManager):
@@ -26,7 +23,7 @@ class UserManager(BaseUserManager):
         if password:
             user.set_password(password)
         else:
-            user.set_unusable_password(password)
+            user.set_unusable_password()
 
         user.save(using=self._db)
         return user
@@ -47,14 +44,22 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     """
     email = models.EmailField(max_length=255, unique=True, db_index=True)
-    slug = models.SlugField(unique=True)
     name = models.CharField(max_length=255, blank=True)
+
+    # Django
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
 
+    # Facebook
+    username = models.CharField(max_length=255, unique=True)
+    birthday = models.DateField(blank=True, null=True)
+    gender = models.CharField(max_length=255, blank=True)
+    link = models.CharField(max_length=255, blank=True)
+    hometown = models.CharField(max_length=255, blank=True)
+
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["name"]
+    REQUIRED_FIELDS = ["username"]
 
     objects = UserManager()
 
@@ -63,10 +68,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return '{name} <{email}>'.format(name=self.name, email=self.email)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(unidecode(u"{}".format(self.name)))
-        return super(User, self).save(*args, **kwargs)
 
     def get_short_name(self):
         """

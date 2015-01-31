@@ -82,6 +82,9 @@ INSTALLED_APPS = (
 
     # Plugins:
     'django_extensions',
+    'rest_framework',
+    'rest_framework_swagger',
+    'django_filters',
     'social.apps.django_app.default',
 
     # Apps:
@@ -89,9 +92,29 @@ INSTALLED_APPS = (
     'accounts',
 )
 
-LOGIN_URL = '/'
-LOGIN_REDIRECT_URL = '/'
-LOGIN_ERROR_URL = '/'
+REST_FRAMEWORK = {
+    'DEFAULT_MODEL_SERIALIZER_CLASS': 'rest_framework.serializers.HyperlinkedModelSerializer',
+
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+
+    'DEFAULT_RENDERER_CLASSES': (
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+
+    'DEFAULT_PARSER_CLASSES': (
+        'djangorestframework_camel_case.parser.CamelCaseJSONParser',
+    ),
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
+}
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.facebook.FacebookOAuth2',
@@ -106,8 +129,10 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_uid',
     'social.pipeline.social_auth.auth_allowed',
     'social.pipeline.social_auth.social_user',
-    'social.pipeline.user.get_username',
+    # 'social.pipeline.user.get_username',
     'accounts.pipeline.create_user',
     'social.pipeline.social_auth.associate_user',
     # 'social.pipeline.user.user_details',
 )
+
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
