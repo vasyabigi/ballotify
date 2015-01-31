@@ -28,3 +28,46 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 INSTALLED_APPS += (
     'debug_toolbar.apps.DebugToolbarConfig',
 )
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'default': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': join(BASE_DIR, 'logs', 'ballotify.log'),
+            'maxBytes': 1024 * 1024 * 10,
+            'backupCount': 50,
+            'formatter': 'standard',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': True
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['default'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}

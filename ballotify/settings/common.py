@@ -52,14 +52,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'ballotify.urls'
-
-WSGI_APPLICATION = 'ballotify.wsgi.application'
-
-TEMPLATE_DIRS = (
-    join(BASE_DIR, 'templates'),
-)
-
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.contrib.messages.context_processors.messages',
@@ -68,6 +60,16 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.media',
     'django.core.context_processors.static',
     'django.core.context_processors.request',
+    'social.apps.django_app.context_processors.backends',
+    'social.apps.django_app.context_processors.login_redirect',
+)
+
+ROOT_URLCONF = 'ballotify.urls'
+
+WSGI_APPLICATION = 'ballotify.wsgi.application'
+
+TEMPLATE_DIRS = (
+    join(BASE_DIR, 'templates'),
 )
 
 INSTALLED_APPS = (
@@ -80,51 +82,32 @@ INSTALLED_APPS = (
 
     # Plugins:
     'django_extensions',
+    'social.apps.django_app.default',
 
     # Apps:
     'core',
+    'accounts',
 )
 
+LOGIN_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+LOGIN_ERROR_URL = '/'
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'standard': {
-            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
-        },
-    },
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        }
-    },
-    'handlers': {
-        'default': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': join(BASE_DIR, 'logs', 'ballotify.log'),
-            'maxBytes': 1024 * 1024 * 10,
-            'backupCount': 50,
-            'formatter': 'standard',
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': True
-        }
-    },
-    'loggers': {
-        '': {
-            'handlers': ['default'],
-            'level': 'DEBUG',
-            'propagate': True
-        },
-        'django.request': {
-            'handlers': ['mail_admins'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    }
-}
+AUTHENTICATION_BACKENDS = (
+    'social.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+AUTH_USER_MODEL = 'accounts.User'
+SOCIAL_AUTH_USER_MODEL = 'accounts.User'
+
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'accounts.pipeline.create_user',
+    'social.pipeline.social_auth.associate_user',
+    # 'social.pipeline.user.user_details',
+)
