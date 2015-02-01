@@ -12,3 +12,4 @@
 /ballotify/public/static
 /ballotify/public/media
 /ballotify/logs
+fabfile.py
