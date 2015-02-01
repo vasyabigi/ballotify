@@ -90,6 +90,7 @@ INSTALLED_APPS = (
     # Apps:
     'core',
     'accounts',
+    'streams',
 )
 
 REST_FRAMEWORK = {
