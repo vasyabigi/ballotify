@@ -20,14 +20,12 @@ class LoginView(ObtainJSONWebToken):
         user = login_social_user(request, 'facebook')
 
         if user:
-            if not user.is_active:
-                msg = 'User account is disabled.'
-                raise serializers.ValidationError(msg)
-
             payload = jwt_payload_handler(user)
             return response.Response({'token': jwt_encode_handler(payload)})
         else:
-            raise serializers.ValidationError('Unable to login with provided credentials.')
+            raise serializers.ValidationError({
+                api_settings.NON_FIELD_ERRORS_KEY: ['Unable to login with provided credentials.']
+            })
 
 login_view = LoginView.as_view()
 
