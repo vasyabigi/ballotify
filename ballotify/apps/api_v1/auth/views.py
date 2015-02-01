@@ -2,6 +2,7 @@ from rest_framework import response
 from rest_framework import serializers
 from rest_framework_jwt.views import ObtainJSONWebToken
 from rest_framework_jwt.settings import api_settings
+from rest_framework.settings import api_settings as rest_api_settings
 
 from social.apps.django_app.utils import psa
 
@@ -24,7 +25,7 @@ class LoginView(ObtainJSONWebToken):
             return response.Response({'token': jwt_encode_handler(payload)})
         else:
             raise serializers.ValidationError({
-                api_settings.NON_FIELD_ERRORS_KEY: ['Unable to login with provided credentials.']
+                rest_api_settings.NON_FIELD_ERRORS_KEY: ['Unable to login with provided credentials.']
             })
 
 login_view = LoginView.as_view()
