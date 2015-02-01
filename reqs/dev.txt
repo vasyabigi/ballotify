@@ -1,5 +1,3 @@
 -r common.txt
-ipdb
 django-debug-toolbar
-django-extensions
 werkzeug

@@ -18,15 +18,15 @@ def get_env_variable(var_name):
 DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.postgresql_psycopg2",
-        'NAME': get_env_variable("BALLOTIFY_BETA_DATABASE_NAME"),
-        'USER': get_env_variable("BALLOTIFY_BETA_DATABASE_USER"),
-        'PASSWORD': get_env_variable("BALLOTIFY_BETA_DATABASE_PASSWORD"),
+        'NAME': "ballotify_beta",
+        'USER': get_env_variable("BALLOTIFY_DATABASE_USER"),
+        'PASSWORD': get_env_variable("BALLOTIFY_DATABASE_PASSWORD"),
         'HOST': 'localhost',
         'PORT': '5432',
     }
 }
 
-SECRET_KEY = get_env_variable("BALLOTIFY_BETA_SECRET_KEY")
+SECRET_KEY = get_env_variable("BALLOTIFY_SECRET_KEY")
 
 ADMINS = (
     # ('', ''),
