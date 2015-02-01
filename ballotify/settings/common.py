@@ -1,4 +1,5 @@
 import sys
+import datetime
 from os.path import dirname, join
 
 BASE_DIR = dirname(dirname(__file__))
@@ -94,6 +95,9 @@ INSTALLED_APPS = (
 )
 
 REST_FRAMEWORK = {
+    'PAGINATE_BY': 20,
+    'MAX_PAGINATE_BY': 100,
+
     'DEFAULT_MODEL_SERIALIZER_CLASS': 'rest_framework.serializers.HyperlinkedModelSerializer',
 
     'DEFAULT_PERMISSION_CLASSES': (
@@ -133,7 +137,12 @@ SOCIAL_AUTH_PIPELINE = (
     # 'social.pipeline.user.get_username',
     'accounts.pipeline.create_user',
     'social.pipeline.social_auth.associate_user',
+    'accounts.pipeline.create_default_stream',
     # 'social.pipeline.user.user_details',
 )
 
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=2)
+}

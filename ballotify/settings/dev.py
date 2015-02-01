@@ -1,3 +1,4 @@
+import datetime
 from os.path import join, normpath
 
 from .common import *
@@ -74,4 +75,9 @@ LOGGING = {
 
 
 SOCIAL_AUTH_FACEBOOK_KEY = '107790869310294'
-SOCIAL_AUTH_FACEBOOK_SECRET = '3b53c9038e5b696f8d934be18b33a6f5'
+SOCIAL_AUTH_FACEBOOK_SECRET = '9ffbf73fb4753902fcb067f7235c100d'
+
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=24*30*12*1000)
+}
