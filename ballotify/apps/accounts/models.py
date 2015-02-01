@@ -56,7 +56,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     birthday = models.DateField(blank=True, null=True)
     gender = models.CharField(max_length=255, blank=True)
     link = models.CharField(max_length=255, blank=True)
-    hometown = models.CharField(max_length=255, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
