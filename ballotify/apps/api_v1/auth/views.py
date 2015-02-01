@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_framework_jwt.views import ObtainJSONWebToken
 from rest_framework_jwt.settings import api_settings
 from rest_framework.settings import api_settings as rest_api_settings
-
+from djangorestframework_camel_case.render import CamelCaseJSONRenderer
 from social.apps.django_app.utils import psa
 
 
@@ -17,6 +17,8 @@ class LoginView(ObtainJSONWebToken):
     Returns a JSON Web Token that can be used for authenticated requests.
 
     """
+    renderer_classes = (CamelCaseJSONRenderer,)
+
     def post(self, request):
         user = login_social_user(request, 'facebook')
 
