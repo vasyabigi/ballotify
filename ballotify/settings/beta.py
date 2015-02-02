@@ -36,3 +36,13 @@ ALLOWED_HOSTS = ["api.ballotify.com"]
 
 SOCIAL_AUTH_FACEBOOK_KEY = get_env_variable("BALLOTIFY_SOCIAL_AUTH_FACEBOOK_KEY")
 SOCIAL_AUTH_FACEBOOK_SECRET = get_env_variable("BALLOTIFY_SOCIAL_AUTH_FACEBOOK_SECRET")
+
+RAVEN_CONFIG = {
+    'dsn': get_env_variable("BALLOTIFY_SENTRY_DSN"),
+}
+
+# Add raven to the list of installed apps
+INSTALLED_APPS = INSTALLED_APPS + (
+    # ...
+    'raven.contrib.django.raven_compat',
+)
