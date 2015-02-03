@@ -1,7 +1,9 @@
 from django.db import models
 from django.utils import timezone
-
+from django.template.defaultfilters import slugify
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+
+from unidecode import unidecode
 
 
 class UserManager(BaseUserManager):
@@ -45,6 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     email = models.EmailField(max_length=255, unique=True, db_index=True)
     name = models.CharField(max_length=255, blank=True)
+    slug = models.SlugField(max_length=255, unique=True)
 
     # Django
     is_active = models.BooleanField(default=True)
@@ -64,6 +67,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         ordering = ('email', 'name')
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(unidecode(u"{}".format(self.username)))
+
+        return super(User, self).save(*args, **kwargs)
 
     def __str__(self):
         return '{name} <{email}>'.format(name=self.name, email=self.email)

@@ -8,7 +8,7 @@ from streams.models import Stream
 
 class UserDetailView(generics.RetrieveUpdateAPIView):
     """
-    Retrieve/Update authenticated user details.
+    Retrieve/Update authenticated user`s details.
 
     """
     model = User
@@ -20,9 +20,9 @@ class UserDetailView(generics.RetrieveUpdateAPIView):
 user_detail_view = UserDetailView.as_view()
 
 
-class UserStreamsView(generics.ListCreateAPIView):
+class UserStreamsView(generics.ListAPIView):
     """
-    List/Create authenticated user's streams.
+    List authenticated user`s streams.
 
     """
     model = Stream
@@ -30,9 +30,5 @@ class UserStreamsView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return self.request.user.owned_streams.public()
-
-    def perform_create(self, serializer):
-        serializer.validated_data["owner"] = self.request.user
-        serializer.save()
 
 user_streams_view = UserStreamsView.as_view()
