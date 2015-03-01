@@ -12,7 +12,7 @@ class StreamQuerySet(models.QuerySet):
         return self.filter(is_default=False)
 
     def get_default(self):
-        return self.filter(is_default=False).first()
+        return self.filter(is_default=True).first()
 
 
 class Stream(TimeStampedModel):
@@ -20,7 +20,7 @@ class Stream(TimeStampedModel):
     is_default = models.BooleanField(default=False)
 
     title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
 
     followers = models.ManyToManyField(User, related_name="followed_streams", through='StreamMembership')
 

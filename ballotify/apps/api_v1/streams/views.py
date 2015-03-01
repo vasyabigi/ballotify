@@ -1,12 +1,12 @@
 from rest_framework import generics, permissions, response, status, serializers
 from rest_framework.settings import api_settings
 
-from .serializers import StreamSerializer
-from .permissions import IsOwnerOrReadOnly
-from ..accounts.serializers import AccountSerializer
 from streams.models import Stream, StreamMembership
 from accounts.models import User
 from core.utils import memoized
+from ..accounts.serializers import AccountSerializer
+from .serializers import StreamSerializer, StreamQuestionSerializer
+from .permissions import IsOwnerOrReadOnly
 
 
 class StreamsView(generics.ListCreateAPIView):
@@ -26,7 +26,17 @@ class StreamsView(generics.ListCreateAPIView):
 streams_view = StreamsView.as_view()
 
 
-class StreamDetailView(generics.RetrieveUpdateDestroyAPIView):
+class StreamMixin(object):
+    """
+    Share common methods for stream dependent views.
+
+    """
+    @memoized
+    def get_stream(self):
+        return generics.get_object_or_404(Stream, slug=self.kwargs.get("slug"))
+
+
+class StreamDetailView(StreamMixin, generics.RetrieveUpdateDestroyAPIView):
     """
     Retrieve/Update/Destroy streams.
 
@@ -41,10 +51,36 @@ class StreamDetailView(generics.RetrieveUpdateDestroyAPIView):
 stream_detail_view = StreamDetailView.as_view()
 
 
-class StreamMixin(object):
-    @memoized
-    def get_stream(self):
-        return generics.get_object_or_404(Stream, slug=self.kwargs.get("slug"))
+class StreamQuestionsView(StreamMixin, generics.ListAPIView):
+    """
+    List/Create questions of the specific stream.
+
+    """
+    serializer_class = StreamQuestionSerializer
+
+    def get_queryset(self):
+        return self.get_stream().questions.all()
+
+    def perform_create(self, serializer):
+        serializer.validated_data["stream"] = self.get_stream()
+        serializer.save()
+
+stream_questions_view = StreamQuestionsView.as_view()
+
+
+class StreamQuestionDetailView(StreamMixin, generics.RetrieveAPIView):
+    """
+    Retrieve/Update/Destroy question of the specific stream.
+
+    """
+    serializer_class = StreamQuestionSerializer
+    lookup_field = "slug"
+    lookup_url_kwarg = "question_slug"
+
+    def get_queryset(self):
+        return self.get_stream().questions.all()
+
+stream_question_detail_view = StreamQuestionDetailView.as_view()
 
 
 class StreamFollowersView(StreamMixin, generics.ListCreateAPIView):

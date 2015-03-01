@@ -7,4 +7,4 @@ class IsOwnerOrReadOnly(BasePermission):
 
     """
     def has_object_permission(self, request, view, obj):
-        return request.method in SAFE_METHODS or obj.owner == request.user
+        return request.method in SAFE_METHODS or view.get_stream().owner == request.user
