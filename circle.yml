@@ -1,0 +1,7 @@
+dependencies:
+  override:
+    - pip install -r reqs/prod.txt
+
+test:
+  override:
+    - python manage.py test --settings "ballotify.settings.test"
