@@ -4,6 +4,9 @@ from django.core.exceptions import ImproperlyConfigured
 from .common import *
 
 
+DEBUG = True
+
+
 def get_env_variable(var_name):
     """
     Get the environment variable or return exception.
@@ -18,11 +21,11 @@ def get_env_variable(var_name):
 DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.postgresql_psycopg2",
-        'NAME': get_env_variable("DATABASE_NAME"),
-        'USER': get_env_variable("DATABASE_USER"),
-        'PASSWORD': get_env_variable("DATABASE_PASSWORD"),
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': get_env_variable("DB_ENV_DATABASE_NAME"),
+        'USER': get_env_variable("DB_ENV_POSTGRES_USER"),
+        'PASSWORD': get_env_variable("DB_ENV_POSTGRES_PASSWORD"),
+        'HOST': get_env_variable("DB_PORT_5432_TCP_ADDR"),
+        'PORT': get_env_variable("DB_PORT_5432_TCP_PORT"),
     }
 }
 

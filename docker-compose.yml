@@ -1,9 +1,19 @@
 web:
   build: .
-  command: python manage.py runserver 0.0.0.0:8000
+  command: "/env/bin/python manage.py runserver 0.0.0.0:8000"
+  environment:
+    DJANGO_SETTINGS_MODULE: ballotify.settings.prod
+    SECRET_KEY: oQiLwk7pMXronMdxbyComCzbD9MtYtF6FBF9UaywbTjVDqojEACyAcnN
+  volumes:
+    - .:/app
+  ports:
+   - "8002:8000"
   links:
    - db
-  ports:
-   - "8000:8000"
 db:
-  image: postgres
+  image: postgres:9.4.1
+  environment:
+    DATABASE_NAME: ballotify
+    POSTGRES_USER: rambo
+    POSTGRES_PASSWORD: z8CtmFNeywnexxBYh3rGXGsNjDgF
+    PGPASSWORD: z8CtmFNeywnexxBYh3rGXGsNjDgF

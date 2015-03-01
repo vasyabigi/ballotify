@@ -47,7 +47,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     email = models.EmailField(max_length=255, unique=True, db_index=True)
     name = models.CharField(max_length=255, blank=True)
-    slug = models.SlugField(max_length=255, unique=True)
 
     # Django
     is_active = models.BooleanField(default=True)
@@ -69,9 +68,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         ordering = ('email', 'name')
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(unidecode(u"{}".format(self.username)))
-
+        self.username = slugify(unidecode(u"{}".format(self.username)))
         return super(User, self).save(*args, **kwargs)
 
     def __str__(self):

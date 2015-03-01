@@ -35,6 +35,7 @@ class AccountStreamsView(AccountStreamMixin, generics.ListAPIView):
 
     """
     serializer_class = StreamSerializer
+    lookup_field = "username"
 
     def get_queryset(self):
         return self.get_streams()
