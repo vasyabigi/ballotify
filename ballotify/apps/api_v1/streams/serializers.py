@@ -15,4 +15,4 @@ class StreamSerializer(serializers.ModelSerializer):
 
 class StreamQuestionSerializer(QuestionSerializer):
     class Meta(QuestionSerializer.Meta):
-        fields = ('title', 'slug', 'modified', 'created',)
+        fields = ('title', 'slug', 'choices', 'modified', 'created',)

@@ -25,7 +25,7 @@ class QuestionMixin(object):
 
     """
     @memoized
-    def get_stream(self):
+    def get_question(self):
         return generics.get_object_or_404(Question, slug=self.kwargs.get("slug"))
 
 
@@ -44,12 +44,13 @@ class QuestionDetailView(QuestionMixin, generics.RetrieveUpdateDestroyAPIView):
 question_detail_view = QuestionDetailView.as_view()
 
 
-class ChoicesView(generics.ListCreateAPIView):
-    serializer_class = ChoiceSerializer
+class ChoicesView(QuestionMixin, generics.ListCreateAPIView):
+    """
+    List/Create choices for specific question.
 
-    @memoized
-    def get_question(self):
-        return generics.get_object_or_404(Question, slug=self.kwargs.get("slug"))
+    """
+    permission_classes = (permissions.IsAuthenticated, IsStreamOwnerOrReadOnly,)
+    serializer_class = ChoiceSerializer
 
     def get_queryset(self):
         return self.get_question().choices.all()
