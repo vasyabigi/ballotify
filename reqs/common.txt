@@ -1,5 +1,5 @@
 Django==1.7.3
-djangorestframework==3.0.4
+djangorestframework==3.0.5
 djangorestframework-jwt==1.2.0
 python-social-auth==0.2.1
 django-suit==0.2.12

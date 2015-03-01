@@ -1,5 +1,7 @@
 from django.db import models
+
 from model_utils.models import TimeStampedModel
+from django_extensions.db.fields import ShortUUIDField
 
 from streams.models import Stream
 from core.utils import id_generator
@@ -25,6 +27,7 @@ class Question(TimeStampedModel):
 
 
 class Choice(TimeStampedModel):
+    uuid = ShortUUIDField(db_index=True)
     question = models.ForeignKey(Question, related_name="choices")
 
     title = models.CharField(max_length=255)

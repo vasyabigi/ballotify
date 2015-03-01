@@ -3,13 +3,32 @@ from django.db import transaction
 from rest_framework import serializers
 
 from questions.models import Question, Choice
+from votes.models import Vote
 from streams.models import Stream
+from .fields import ChoiceRelatedField
+
+
+class VoteSerializer(serializers.ModelSerializer):
+    choice = ChoiceRelatedField(queryset=Choice.objects.all(), slug_field='uuid')
+    user = serializers.SlugRelatedField(read_only=True, slug_field='username')
+
+    class Meta:
+        model = Vote
+        fields = ('choice', 'user_agent', 'ip', 'user')
+        read_only_fields = ('user_agent', 'ip', 'user')
+
+    def validate_choice(self, choice):
+        if choice.votes.filter(user=self.context['request'].user):
+            raise serializers.ValidationError("Already voted. Fuck off!1!!!11")
+
+        return choice
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Choice
-        fields = ('title',)
+        fields = ('title', 'uuid')
+        read_only_fields = ('uuid',)
 
 
 class QuestionSerializer(serializers.ModelSerializer):

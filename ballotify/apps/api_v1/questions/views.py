@@ -2,8 +2,9 @@ from rest_framework import generics, permissions
 
 from questions.models import Question
 from core.utils import memoized
-from .serializers import QuestionSerializer, QuestionDetailSerializer, ChoiceSerializer
-from .permissions import IsStreamOwnerOrReadOnly
+from .serializers import QuestionSerializer, QuestionDetailSerializer, ChoiceSerializer, VoteSerializer
+from .permissions import IsStreamOwnerOrReadOnly, IsVotedOrPostOnly
+from .utils import get_client_ip
 
 
 class QuestionsView(generics.ListCreateAPIView):
@@ -60,3 +61,27 @@ class ChoicesView(QuestionMixin, generics.ListCreateAPIView):
         serializer.save()
 
 choices_view = ChoicesView.as_view()
+
+
+class VotesView(QuestionMixin, generics.ListCreateAPIView):
+    """
+    List/Create votes for specific question.
+
+    """
+    permission_classes = (permissions.IsAuthenticated, IsVotedOrPostOnly,)
+    serializer_class = VoteSerializer
+
+    def get_queryset(self):
+        return self.get_question().votes.all()
+
+    def perform_create(self, serializer):
+        serializer.validated_data.update({
+            "user": self.request.user,
+            "question": self.get_question(),
+            "ip": get_client_ip(self.request),
+            "user_agent": self.request.META.get('HTTP_USER_AGENT')
+        })
+
+        serializer.save()
+
+votes_view = VotesView.as_view()
