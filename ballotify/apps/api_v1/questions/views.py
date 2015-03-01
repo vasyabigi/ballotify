@@ -2,7 +2,7 @@ from rest_framework import generics, permissions
 
 from questions.models import Question
 from core.utils import memoized
-from .serializers import QuestionSerializer, QuestionDetailSerializer
+from .serializers import QuestionSerializer, QuestionDetailSerializer, ChoiceSerializer
 from .permissions import IsStreamOwnerOrReadOnly
 
 
@@ -42,3 +42,20 @@ class QuestionDetailView(QuestionMixin, generics.RetrieveUpdateDestroyAPIView):
         return Question.objects.all()
 
 question_detail_view = QuestionDetailView.as_view()
+
+
+class ChoicesView(generics.ListCreateAPIView):
+    serializer_class = ChoiceSerializer
+
+    @memoized
+    def get_question(self):
+        return generics.get_object_or_404(Question, slug=self.kwargs.get("slug"))
+
+    def get_queryset(self):
+        return self.get_question().choices.all()
+
+    def perform_create(self, serializer):
+        serializer.validated_data["question"] = self.get_question()
+        serializer.save()
+
+choices_view = ChoicesView.as_view()
