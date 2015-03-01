@@ -92,6 +92,7 @@ INSTALLED_APPS = (
     'core',
     'accounts',
     'streams',
+    'questions',
 )
 
 REST_FRAMEWORK = {

@@ -1,5 +1,7 @@
 import collections
 import functools
+import string
+import random
 
 
 class memoized(object):
@@ -38,3 +40,7 @@ class memoized(object):
 
         """
         return functools.partial(self.__call__, obj)
+
+
+def id_generator(size=6, chars=string.ascii_letters + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
