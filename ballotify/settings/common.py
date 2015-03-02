@@ -46,6 +46,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -87,6 +88,7 @@ INSTALLED_APPS = (
     'rest_framework_swagger',
     'django_filters',
     'social.apps.django_app.default',
+    'corsheaders',
 
     # Apps:
     'core',

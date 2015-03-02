@@ -46,3 +46,5 @@ INSTALLED_APPS = INSTALLED_APPS + (
     # ...
     'raven.contrib.django.raven_compat',
 )
+
+CORS_ORIGIN_ALLOW_ALL = True
